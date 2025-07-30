@@ -36,6 +36,19 @@ function Vector:mag()
     return math.sqrt(m)    
 end
 
+function Vector:setMag(mag)
+    local x, y = self.x, self.y
+    local m = math.sqrt(x * x + y * y)
+    if mag == 0 then
+        return {x = 0, y = 0}
+    end
+    local scale = mag / m
+    return {
+        x = x * scale,
+        y = y * scale
+    }   
+end
+
 function Vector:normalize()
     local m = self:mag()
     if (m > 0) then
@@ -46,6 +59,12 @@ end
 function Vector.ramdon2D()
     local x = love.math.random(32, 750)
     local y = love.math.random(32, 750)
+    return Vector.createVector(x, y)
+end
+
+function Vector.sub2D(v1, v2)
+    local x = v1.x  - v2.x
+    local y = v1.y  - v2.y
     return Vector.createVector(x, y)
 end
 
