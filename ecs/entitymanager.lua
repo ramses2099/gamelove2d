@@ -52,4 +52,6 @@ function EntityManager.getEntitiesWith( componentTypes )
     return matchingEntities
 end
 
+
+
 return EntityManager
