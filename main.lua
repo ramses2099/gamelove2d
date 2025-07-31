@@ -49,9 +49,15 @@ end
 function love.load()
   DEBUG = true
   -- Temp
-  GenerateEntities(10)
-   
+  -- GenerateEntities(10)
   local player = GenerateEntityPlayer()
+
+  for key, component in pairs(player.components) do
+   print(string.format("key = %s", key))
+  end
+  
+  -- local player = GenerateEntityPlayer()
+
   
 end
 
@@ -61,7 +67,9 @@ function love.mousepressed(x, y, button, istouch)
   end
 end
 
+
 function love.update(dt)
+  Systems.InputSystem.update(dt)
   Systems.PhysicsSystem.update(dt)
   Systems.CollisionSystem.update(dt)
   Systems.PhysicsBoundarySystem.update(dt)

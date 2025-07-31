@@ -6,47 +6,6 @@ local Systems = {}
 -- Systems
 ---------------------------------------
 
---#region Temp
-Systems.MovementSystem = {
-    update = function(dt)
-        local entitesToMove = EntityManager.getEntitiesWith({"PositionComponent", "VelocityComponent"})
-        for _, entity in ipairs(entitesToMove) do
-            local pos = EntityManager.getComponent(entity, "PositionComponent")
-            local vel = EntityManager.getComponent(entity, "VelocityComponent")
-
-            pos.x = pos.x + vel.vx * dt
-            pos.y = pos.y + vel.vy * dt
-        end       
-    end
-}
-
-
-Systems.BoundarySystem = {
-    update = function(dt)
-        local entitesToMove = EntityManager.getEntitiesWith({"PositionComponent","VelocityComponent","BoundaryComponent", "RenderableComponent"})
-        for _, entity in ipairs(entitesToMove) do
-            local pos = EntityManager.getComponent(entity, "PositionComponent")
-            local vel = EntityManager.getComponent(entity, "VelocityComponent")
-            local boun = EntityManager.getComponent(entity, "BoundaryComponent")
-            local ren = EntityManager.getComponent(entity, "RenderableComponent")
-
-            if(pos.x - ren.radius < 0) then
-                vel.vx = vel.vx * -1
-            elseif (pos.x + ren.radius > boun.w_width) then
-                vel.vx = vel.vx * -1
-            end
-
-            if (pos.y - ren.radius < 0) then
-                vel.vy = vel.vy * -1
-            elseif(pos.y + ren.radius > boun.w_height) then
-                vel.vy = vel.vy * -1
-            end            
-        end       
-    end
-}
---#endregion temp
-
-
 Systems.PhysicsSystem = {
     update = function(dt)
         local entitesToMove = EntityManager.getEntitiesWith({"PositionComponent", "PhysicsComponent"})
@@ -124,6 +83,27 @@ Systems.CollisionSystem = {
               end
             end
         end
+    end
+}
+
+Systems.InputSystem ={
+    update = function(dt)
+        local ent1 = EntityManager.getEntitiesWith({"InputComponent", "PlayerComponent"})
+        if (EntityManager.hasComponent(ent1,"PhysicsComponent")) then
+            print("la tengo")
+        end
+        local phy1 = EntityManager.getComponent(ent1, "PhysicsComponent")
+        
+
+        if love.keyboard.isDown("left") then 
+            phy1.acceleration.x = phy1.acceleration.x * -1 
+        end
+        if love.keyboard.isDown("right") then
+            phy1.acceleration.x = phy1.acceleration.x * -1 
+         end
+        if love.keyboard.isDown("up") then end
+        if love.keyboard.isDown("down") then end
+
     end
 }
 
