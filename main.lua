@@ -17,6 +17,7 @@ function GenerateEntities(n)
     local ax = love.math.random(5, 10)
     local ay = love.math.random(3, 10)
 
+    EntityManager.addComponent(entity, "EnemyIAComponent", Components.EnemyIAComponent())
     EntityManager.addComponent(entity, "PositionComponent", Components.PositionComponent(x, y))
     EntityManager.addComponent(entity, "ColorComponent", Components.ColorComponent())
     EntityManager.addComponent(entity, "RenderableComponent", Components.RenderableComponent())
@@ -26,12 +27,32 @@ function GenerateEntities(n)
   end
 end
 
+function GenerateEntityPlayer()
+  
+    local entity = EntityManager.createEntity()
+     -- position --
+    local x = love.math.random(32, 590)
+    local y = love.math.random(32, 590)
+    
+    EntityManager.addComponent(entity, "PlayerComponent", Components.PlayerComponent())
+    EntityManager.addComponent(entity, "InputComponent", Components.InputComponent())
+    EntityManager.addComponent(entity, "PositionComponent", Components.PositionComponent(x, y))
+    EntityManager.addComponent(entity, "ColorComponent", Components.ColorComponent())
+    EntityManager.addComponent(entity, "RenderableComponent", Components.RenderableComponent())
+    EntityManager.addComponent(entity, "PhysicsComponent", Components.PhysicsComponent())
+    EntityManager.addComponent(entity, "PhysicsBoundaryComponent", Components.PhysicsBoundaryComponent(W_WIDTH, W_HEIGHT))
+    EntityManager.addComponent(entity, "CollideComponent", Components.CollideComponent())
+    
+    return entity
+end
+
 function love.load()
   DEBUG = true
   -- Temp
   GenerateEntities(10)
-
-
+   
+  local player = GenerateEntityPlayer()
+  
 end
 
 function love.mousepressed(x, y, button, istouch)

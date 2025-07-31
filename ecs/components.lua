@@ -64,4 +64,9 @@ function Components.EnemyIAComponent(  )
     return self
 end
 
+function Components.PlayerComponent(  )
+    local self = setmetatable({}, Components)
+    return self
+end
+
 return Components

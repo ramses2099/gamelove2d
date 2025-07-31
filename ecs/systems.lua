@@ -93,38 +93,37 @@ Systems.CollisionSystem = {
     distSq = function (pos1, pos2)
         local dx = pos2.x - pos1.x
         local dy = pos2.y - pos1.y
-        return (dx * dx) + (dy * dy)        
+        return math.sqrt((dx * dx) + (dy * dy))        
     end,
     update = function(dt)
-        local entitesToMove = EntityManager.getEntitiesWith({"PositionComponent","PhysicsComponent","RenderableComponent", "CollideComponent"})
-        for _, entity1 in ipairs(entitesToMove) do
-            local pos1 = EntityManager.getComponent(entity1, "PositionComponent")
-            local phy1 = EntityManager.getComponent(entity1, "PhysicsComponent")
-            local ren1 = EntityManager.getComponent(entity1, "RenderableComponent")
-            local collide1 = EntityManager.getComponent(entity1, "CollideComponent")
+        local collisionCandidates = EntityManager.getEntitiesWith({"PositionComponent","PhysicsComponent","RenderableComponent", "CollideComponent"})
+        local numCandidate = #collisionCandidates
+
+        for i = 1, numCandidate, 1 do
+            local ent1 = collisionCandidates[i]
+            local pos1 = EntityManager.getComponent(ent1, "PositionComponent")
+            local phy1 = EntityManager.getComponent(ent1, "PhysicsComponent")
+            local ren1 = EntityManager.getComponent(ent1, "RenderableComponent")
             
-            for _, entity2 in ipairs(entitesToMove) do
-                local pos2 = EntityManager.getComponent(entity2, "PositionComponent")
-                local phy2 = EntityManager.getComponent(entity2, "PhysicsComponent")
-                local ren2 = EntityManager.getComponent(entity2, "RenderableComponent")
-                local collide2 = EntityManager.getComponent(entity2, "CollideComponent")
+            for j= i + 1, numCandidate, 1 do
+              local ent2 = collisionCandidates[j]
+              local pos2 = EntityManager.getComponent(ent2, "PositionComponent")
+              local phy2 = EntityManager.getComponent(ent2, "PhysicsComponent")
+              local ren2 = EntityManager.getComponent(ent2, "RenderableComponent")
 
-                -- Collide Validate --
-                local dist = Systems.CollisionSystem.distSq(pos1, pos2)
-                local radiiSum = ren1.radius + ren2.radius
-                local isCollide = dist <= (radiiSum * radiiSum)
+              local dist = Systems.CollisionSystem.distSq(pos1, pos2)
+              local radiiSum = ren1.radius + ren2.radius
+              local isCollision = dist <= (radiiSum)
 
-                if isCollide then
-                    print(string.format("Collision detected between Entity %d and Entity %d!", entity1.id, entity2.id))
-
-                    phy1.velocity.x = phy1.velocity.x  * -1
-                    phy1.velocity.y = phy1.velocity.y * -1
-                    -- other
-                    phy2.velocity.x = phy2.velocity.x  * -1
-                    phy2.velocity.y = phy2.velocity.y * -1
-                end                
-            end                        
-        end       
+              if (isCollision == true) then
+                phy1.velocity.x = phy1.velocity.x  * -1
+                phy1.velocity.y = phy1.velocity.y * -1
+                -- other
+                phy2.velocity.x = phy2.velocity.x  * -1
+                phy2.velocity.y = phy2.velocity.y * -1
+              end
+            end
+        end
     end
 }
 
