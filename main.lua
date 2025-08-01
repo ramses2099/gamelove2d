@@ -1,66 +1,46 @@
 _G.love = require("love")
-local EntityManager = require("ecs.entitymanager")
-local Components = require("ecs.components")
-local Systems = require("ecs.systems")
+local EntityManager = require("ecsv2.entitymanager")
+local Entity = require("ecsv2.entity")
 
 RADIUS = 32
 W_WIDTH = 800
 W_HEIGHT = 600
 
-function GenerateEntities(n)
-  for i = 1, n, 1 do
+function generateEntities( )
+  for i = 1, 10, 1 do
     local entity = EntityManager.createEntity()
-     -- position --
-    local x = love.math.random(32, 590)
-    local y = love.math.random(32, 590)
-    -- Accelartion --
-    local ax = love.math.random(5, 10)
-    local ay = love.math.random(3, 10)
-
-    EntityManager.addComponent(entity, "EnemyIAComponent", Components.EnemyIAComponent())
-    EntityManager.addComponent(entity, "PositionComponent", Components.PositionComponent(x, y))
-    EntityManager.addComponent(entity, "ColorComponent", Components.ColorComponent())
-    EntityManager.addComponent(entity, "RenderableComponent", Components.RenderableComponent())
-    EntityManager.addComponent(entity, "PhysicsComponent", Components.PhysicsComponent(ax, ay))
-    EntityManager.addComponent(entity, "PhysicsBoundaryComponent", Components.PhysicsBoundaryComponent(W_WIDTH, W_HEIGHT))
-    EntityManager.addComponent(entity, "CollideComponent", Components.CollideComponent())
+    Entity.addComponent(entity, "PositionComponent",{ x=1 + i, y=10 + i })
+    Entity.addComponent(entity, "ColorComponent",{ r=10, g=10, b=1, a=1 }) 
+    Entity.addComponent(entity, "RenderableComponent", { shape = "rect"})
+    Entity.addComponent(entity, "PhysicsComponent", { vx = 15, vy = 35})
+    Entity.addComponent(entity, "PhysicsBoundaryComponent", { w = 255, h = 333})
+    Entity.addComponent(entity, "CollideComponent", {isCollide = true})
   end
-end
-
-function GenerateEntityPlayer()
-  
-    local entity = EntityManager.createEntity()
-     -- position --
-    local x = love.math.random(32, 590)
-    local y = love.math.random(32, 590)
-    
-    EntityManager.addComponent(entity, "PlayerComponent", Components.PlayerComponent())
-    EntityManager.addComponent(entity, "InputComponent", Components.InputComponent())
-    EntityManager.addComponent(entity, "PositionComponent", Components.PositionComponent(x, y))
-    EntityManager.addComponent(entity, "ColorComponent", Components.ColorComponent())
-    EntityManager.addComponent(entity, "RenderableComponent", Components.RenderableComponent())
-    EntityManager.addComponent(entity, "PhysicsComponent", Components.PhysicsComponent())
-    EntityManager.addComponent(entity, "PhysicsBoundaryComponent", Components.PhysicsBoundaryComponent(W_WIDTH, W_HEIGHT))
-    EntityManager.addComponent(entity, "CollideComponent", Components.CollideComponent())
-    
-    return entity
 end
 
 function love.load()
   DEBUG = true
   -- Temp
-  
-  GenerateEntities(10)
-  
-  local player = GenerateEntityPlayer()
+  generateEntities()
 
-  for key, component in pairs(player.components) do
-   print(string.format("key = %s", key))
+  entity01 = EntityManager.createEntity("Player")
+  Entity.addComponent(entity01, "PositionComponent",{ x=10, y=10 })
+  Entity.addComponent(entity01, "ColorComponent",{ r=10, g=10, b=1, a=1 })
+   
+  for _, ent in ipairs(EntityManager.getAllEntities()) do
+    print(string.format("Entity Id %s", ent.entityId))
   end
-  
-  -- local player = GenerateEntityPlayer()
 
+  totalentity = EntityManager.countEntity()
+  print(string.format("Total Entity  %s", totalentity))
   
+  local entEnemy = EntityManager.getEntityWithTag("Enemy")
+  print("total entity enemy %s", #entEnemy)
+
+  local entPlayer = EntityManager.getEntityWithTag("Player")
+  print("total entity player %s", #entPlayer)
+
+
 end
 
 function love.mousepressed(x, y, button, istouch)
@@ -76,10 +56,7 @@ function love.keypressed(key, scancode, isrepeat)
 end
 
 function love.update(dt)
-  Systems.InputSystem.update(dt)
-  Systems.PhysicsSystem.update(dt)
-  Systems.CollisionSystem.update(dt)
-  Systems.PhysicsBoundarySystem.update(dt)
+  
 end
 
 function love.draw()
@@ -89,9 +66,5 @@ function love.draw()
     love.graphics.print("FPS: " .. love.timer.getFPS(), 10, 10)
   end
 
-  -- System Render
-  Systems.RenderSystem.update()
 
-
-  
 end
