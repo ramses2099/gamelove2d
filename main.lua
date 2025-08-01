@@ -74,6 +74,7 @@ end
 
 function love.update(dt)
   Systems.PhysicsSystem.update(dt)
+  Systems.PhysicsBoundarySystem.update(dt)
 end
 
 function love.draw()

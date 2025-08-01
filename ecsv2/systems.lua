@@ -6,6 +6,34 @@ local Systems = {}
 --====================================================
 -- Systems
 --====================================================
+
+Systems.PhysicsBoundarySystem = {
+    update = function(dt)
+        local entitesToMove = EntityManager.getAllEntities()        
+        for _, entity in ipairs(entitesToMove) do
+            local allComponentsRequired = Entity.hasComponentRequired(entity, {"PositionComponent","PhysicsComponent","PhysicsBoundaryComponent", "RenderableComponent"})
+            if allComponentsRequired then
+                local pos = Entity.getComponent(entity, "PositionComponent")
+                local phy = Entity.getComponent(entity, "PhysicsComponent")
+                local boun = Entity.getComponent(entity, "PhysicsBoundaryComponent")
+                local ren = Entity.getComponent(entity, "RenderableComponent")
+
+                if(pos.x - ren.radius < 0) then
+                    phy.velocity.x = phy.velocity.x  * -1
+                elseif (pos.x + ren.radius > boun.w_width) then
+                    phy.velocity.x = phy.velocity.x  * -1
+                end
+
+                if (pos.y - ren.radius < 0) then
+                    phy.velocity.y = phy.velocity.y * -1
+                elseif(pos.y + ren.radius > boun.w_height) then
+                    phy.velocity.y = phy.velocity.y * -1
+                end  
+            end
+        end       
+    end
+}
+
 Systems.PhysicsSystem = {
     update = function(dt)        
         local entitesToMove = EntityManager.getAllEntities()
