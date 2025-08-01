@@ -28,6 +28,15 @@ function Entity.getComponent( entity, componentType )
     return entity.components[componentType]
 end
 
+function Entity.hasComponentRequired(entity, requiredComponents )
+    for _, key in ipairs(requiredComponents) do
+        if entity.components[key] == nil then
+            return false
+        end
+    end
+    return true
+end
+
 function Entity.countComponent( entity )
     assert(type(entity)=="table","Entity is required")
     local table = entity.components

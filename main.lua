@@ -40,6 +40,12 @@ function love.load()
   local entPlayer = EntityManager.getEntityWithTag("Player")
   print("total entity player %s", #entPlayer)
 
+  local ok = Entity.hasComponentRequired(entity01, {"PositionComponent","ColorComponent2"})
+  if ok then
+    print("tiene todos los componenets necesarios")
+  else
+    print("no tiene todos los componenets necesarios")
+  end
 
 end
 
