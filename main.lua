@@ -49,7 +49,9 @@ end
 function love.load()
   DEBUG = true
   -- Temp
-  -- GenerateEntities(10)
+  
+  GenerateEntities(10)
+  
   local player = GenerateEntityPlayer()
 
   for key, component in pairs(player.components) do
@@ -67,6 +69,11 @@ function love.mousepressed(x, y, button, istouch)
   end
 end
 
+function love.keypressed(key, scancode, isrepeat)
+   if key == "escape" then
+      love.event.quit()
+   end
+end
 
 function love.update(dt)
   Systems.InputSystem.update(dt)

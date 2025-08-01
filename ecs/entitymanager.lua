@@ -19,7 +19,7 @@ function EntityManager.createEntity()
     local entityId = EntityManager._nextEntityId
     EntityManager._nextEntityId = EntityManager._nextEntityId + 1
     local entity = Entity.new(entityId)
-    EntityManager._entities[entity.id] = entity
+    EntityManager._entities[entityId] = entity
     return entity
 end
 
@@ -63,6 +63,16 @@ function EntityManager.getEntitiesWith(componentTypes )
         end
     end
     return matchingEntities
+end
+
+function EntityManager.getEntityWith( componentType )
+    local entity = nil
+    for _, ent in pairs(EntityManager._entities) do
+        if EntityManager.hasComponent(ent, componentType) then
+            return ent
+        end            
+    end
+    return entity
 end
 
 return EntityManager

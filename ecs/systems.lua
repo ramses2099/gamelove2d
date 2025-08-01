@@ -88,19 +88,15 @@ Systems.CollisionSystem = {
 
 Systems.InputSystem ={
     update = function(dt)
-        local ent1 = EntityManager.getEntitiesWith({"InputComponent", "PlayerComponent"})
-        if (EntityManager.hasComponent(ent1,"PhysicsComponent")) then
-            print("la tengo")
-        end
+        local ent1 = EntityManager.getEntityWith("InputComponent")
         local phy1 = EntityManager.getComponent(ent1, "PhysicsComponent")
-        
-
-        if love.keyboard.isDown("left") then 
+       
+        if love.keyboard.isDown("left") then
             phy1.acceleration.x = phy1.acceleration.x * -1 
         end
-        if love.keyboard.isDown("right") then
-            phy1.acceleration.x = phy1.acceleration.x * -1 
-         end
+        if love.keyboard.isDown("right") then 
+            phy1.acceleration.x = phy1.acceleration.x * -1
+        end
         if love.keyboard.isDown("up") then end
         if love.keyboard.isDown("down") then end
 
