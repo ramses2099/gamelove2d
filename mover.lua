@@ -6,20 +6,19 @@ Mover.__index = Mover
 function Mover.new()
     local self = setmetatable({}, Mover)
     -- position --
-    local x = love.math.random(32, 590)
-    local y = love.math.random(32, 590)
+    self.position = Vector.Utils.ramdon2D(32, 650)
+
+    -- acceleration --
+    self.acceleration = Vector.Utils.ramdon2D(-2, 2)
+    
     -- velocity --
-    local vx = love.math.random(-2, 2)
-    local vy = love.math.random(-2, 2)
+    self.velocity = Vector.createVector(0, 0)
+    
     -- radius --
-    self.radius = love.math.random(5, 32)
+    self.radius = 32 -- love.math.random(16, 32)
+    
     -- mass -- 
     self.mass = 10
-
-    self.position = Vector.createVector(x, y)
-    -- self.velocity = Vector.createVector(vx, vy)
-    self.velocity = Vector.createVector(0, 0)
-    self.acceleration = Vector.createVector(0, 0)
 
     self.color = {love.math.random(0, 1),love.math.random(0, 1),love.math.random(0, 1), 1}
     self.w_height = 600

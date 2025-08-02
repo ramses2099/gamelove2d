@@ -1,4 +1,6 @@
--- entity
+--===============================================
+-- Vector class for manage operation with vectors
+--===============================================
 Vector = {}
 Vector.__index = Vector
 
@@ -56,20 +58,64 @@ function Vector:normalize()
     end        
 end
 
-function Vector.ramdon2D()
-    local x = love.math.random(32, 750)
-    local y = love.math.random(32, 750)
-    return Vector.createVector(x, y)
-end
-
-function Vector.sub2D(v1, v2)
-    local x = v1.x  - v2.x
-    local y = v1.y  - v2.y
-    return Vector.createVector(x, y)
-end
-
 function Vector:copy()
     return Vector.createVector(self.x, self.y)    
+end
+
+--=====================================================
+-- Vector.Utils sub module of Vector with static method
+--=====================================================
+Vector.Utils = {}
+Vector.Utils.__index = Vector.Utils
+
+function Vector.Utils.ramdon2D(min, max)
+    local x = love.math.random(min, max)
+    local y = love.math.random(min, max)
+    return Vector.createVector(x, y)
+end
+
+function Vector.Utils.sub(v1, v2)
+    local x = v1.x - v2.x
+    local y = v1.y - v2.y
+    return Vector.createVector(x, y)
+end
+
+function Vector.Utils.add(v1, v2)
+    local x = v1.x + v2.x
+    local y = v1.y + v2.y
+    return Vector.createVector(x, y)
+end
+
+function Vector.Utils.mult(v1, n)
+    local x = v1.x * n
+    local y = v1.y * n
+    return Vector.createVector(x, y)
+end
+
+function Vector.Utils.div(v1, n)
+    local x = v1.x / n
+    local y = v1.y / n
+    return Vector.createVector(x, y)
+end
+
+function Vector.Utils.normalize(v1)
+    local length = math.sqrt(v1.x * v1.x + v1.y * v1.y)
+    if length == 0 then
+        return Vector.createVector()
+    end
+
+    local x = v1.x / length
+    local y = v1.y / length
+
+    return Vector.createVector(x, y)
+end
+
+function Vector.Utils.mag(v1)
+    local x = v1.x * v1.x
+    local y = v1.y * v1.y
+    local m = x + y
+
+    return math.sqrt(m)
 end
 
 return Vector
