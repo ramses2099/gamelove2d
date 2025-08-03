@@ -11,6 +11,11 @@ function Vector.createVector(x, y)
     return self
 end
 
+function Vector:set(x, y)
+    self.x = x
+    self.y = y    
+end
+
 function Vector:add(v)
     self.x = self.x + v.x
     self.y = self.y + v.y    
@@ -58,8 +63,22 @@ function Vector:normalize()
     end        
 end
 
+function Vector:limit(max)
+    local m = self:mag()
+    if m > max then
+        self:normalize()
+        self.x = self.x * self.max
+        self.y = self.y * self.max
+    end
+    return self    
+end
+
 function Vector:copy()
     return Vector.createVector(self.x, self.y)    
+end
+
+function Vector:__tostring()
+    return "(" .. self.x .. "," .. self.y .. ")"
 end
 
 --=====================================================

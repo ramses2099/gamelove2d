@@ -1,64 +1,82 @@
 local Vector = require("vector")
+local Shape = require("shape")
 
 Mover = {}
 Mover.__index = Mover
 
 function Mover.new()
     local self = setmetatable({}, Mover)
+    
+    -- mass -- 
+    self.mass = math.random(1,4)
+    
+    -- radius --
+    local radius = math.sqrt(self.mass) * 10
+    
     -- position --
-    self.position = Vector.Utils.ramdon2D(32, 650)
-
+    local position = Vector.createVector(250, 32)
+    self.shape = Shape.CircularShape.new(position.x, position.y, radius)
+    
     -- acceleration --
-    self.acceleration = Vector.Utils.ramdon2D(-2, 2)
+    self.acceleration = Vector.createVector(0, 0)
     
     -- velocity --
     self.velocity = Vector.createVector(0, 0)
     
-    -- radius --
-    self.radius = 32 -- love.math.random(16, 32)
-    
-    -- mass -- 
-    self.mass = 10
 
-    self.color = {love.math.random(0, 1),love.math.random(0, 1),love.math.random(0, 1), 1}
+    self.color = {0.5, 0.5, 0.5}
     self.w_height = 600
     self.w_width = 800
 
     return self
 end
 
-function Mover:applyForce(v)
-    local f = v:copy()
-    f:div(self.mass)
+function Mover:applyForce(force)
+    local f = Vector.Utils.div(force, self.mass)
     self.acceleration:add(f)    
+end
+
+function Mover:friction()
+    local diff = self.w_height - (self.shape.position.y + self.shape.radius)
+    if (diff < 1) then
+        local friction = self.velocity:copy()
+        friction:normalize()
+        friction:mult(-1)
+
+        local mu = 0.1
+        local normal = self.mass
+        friction:setMag(mu * normal)
+
+        self:applyForce(friction)
+    end
 end
 
 function Mover:draw()
     love.graphics.setColor(self.color)
-    love.graphics.circle("fill", self.position.x, self.position.y, self.radius)
+    love.graphics.circle("fill", self.shape.position.x, self.shape.position.y, self.shape.radius)
     love.graphics.setLineWidth(5)
     love.graphics.setColor(1, 1, 1, 1)   
-    love.graphics.circle("line", self.position.x, self.position.y, self.radius)
+    love.graphics.circle("line", self.shape.position.x, self.shape.position.y, self.shape.radius)
 end
 
 function Mover:update( dt )
     self.velocity:add(self.acceleration)
-    self.position:add(self.velocity) 
+    self.shape.position:add(self.velocity) 
     self:checkEdges()
 
-    self.acceleration:mult(0)
+    self.acceleration:set(0,0)
 end
 
 function Mover:checkEdges()
-    if(self.position.x - self.radius < 0) then
+    if(self.shape.position.x - self.shape.radius < 0) then
         self.velocity.x = self.velocity.x * -1
-    elseif (self.position.x + self.radius > self.w_width) then
+    elseif (self.shape.position.x + self.shape.radius > self.w_width) then
         self.velocity.x = self.velocity.x * -1
     end
 
-    if (self.position.y - self.radius < 0) then
+    if (self.shape.position.y - self.shape.radius < 0) then
         self.velocity.y = self.velocity.y * -1
-    elseif(self.position.y + self.radius > self.w_height) then
+    elseif(self.shape.position.y + self.shape.radius > self.w_height) then
         self.velocity.y = self.velocity.y * -1
     end
 end
