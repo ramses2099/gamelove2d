@@ -1,7 +1,8 @@
 _G.love = require("love")
 local Vec = require("vector")
 local Particle = require("particle")
-
+local ParticleSystem = require("particlesystem")
+local Utils = require("utils")
 
 RADIUS = 32
 W_WIDTH = 800
@@ -10,9 +11,11 @@ W_HEIGHT = 600
 function love.load()
   DEBUG = true
   -- Temp
-  particle = Particle.new(W_WIDTH/2, 20)
-
-
+  
+  -- particle = Particle.new(W_WIDTH/2, 20)
+  system = ParticleSystem.new()
+  
+  -- Utils.dump(system)
 end
 
 function love.mousepressed(x, y, button, istouch)
@@ -28,16 +31,17 @@ function love.keypressed(key, scancode, isrepeat)
 end
 
 function love.update(dt)
-  particle:update(dt)
+  -- particle:update(dt)
 
-  local gravity = Vec.createVector(0, 0.1)
-  particle:applyForce(gravity)
+  -- local gravity = Vec.createVector(0, 0.1)
+  -- particle:applyForce(gravity)
 
-  if (particle:isDead()) then
-    particle = Particle.new(W_WIDTH/2, 20)
-    print("Particle dead!")
-  end
+  -- if (particle:isDead()) then
+  --   particle = Particle.new(W_WIDTH/2, 20)
+  --   print("Particle dead!")
+  -- end
 
+  system:update(dt)
 end
 
 function love.draw()
@@ -47,9 +51,8 @@ function love.draw()
     love.graphics.print("FPS: " .. love.timer.getFPS(), 10, 10)
   end
 
-  particle:draw()
+  -- particle:draw()
 
-
-
+  system:draw()
 
 end
