@@ -1,5 +1,6 @@
 local Particle = require("particle")
 local Utils = require("utils")
+local Vec = require("vector")
 
 local ParticleSystem = {}
 ParticleSystem.__index = ParticleSystem
@@ -11,13 +12,15 @@ function ParticleSystem.new()
 end
 
 function ParticleSystem:add(particle)
+    local gravity = Vec.createVector(0, 0.1)
+    particle:applyForce(gravity)
     self.particles[#self.particles + 1] = particle
 end
 
 function ParticleSystem:update(dt)
     for _, particle in ipairs(self.particles) do
         particle:update(dt)
-    end  
+    end
 end
 
 function ParticleSystem:draw()

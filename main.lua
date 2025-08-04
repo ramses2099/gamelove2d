@@ -8,14 +8,23 @@ RADIUS = 32
 W_WIDTH = 800
 W_HEIGHT = 600
 
+function is_even(n)
+  return n > 5
+end
+
 function love.load()
   DEBUG = true
   -- Temp
   
-  -- particle = Particle.new(W_WIDTH/2, 20)
-  system = ParticleSystem.new()
+  local numbers = {1,2,3,4,5,6,7,8,10}
+
+  local even_number = Utils.filter(numbers, is_even)
+
+  Utils.dump(even_number)
   
-  -- Utils.dump(system)
+  -- particle = Particle.new(W_WIDTH/2, 20)
+  -- system = ParticleSystem.new()
+  
 end
 
 function love.mousepressed(x, y, button, istouch)
@@ -32,7 +41,7 @@ end
 
 function love.update(dt)
   -- particle:update(dt)
-
+  -- system:add(Particle.new(W_WIDTH/2, 20))
   -- local gravity = Vec.createVector(0, 0.1)
   -- particle:applyForce(gravity)
 
@@ -41,7 +50,7 @@ function love.update(dt)
   --   print("Particle dead!")
   -- end
 
-  system:update(dt)
+  -- system:update(dt)
 end
 
 function love.draw()
@@ -53,6 +62,6 @@ function love.draw()
 
   -- particle:draw()
 
-  system:draw()
+  -- system:draw()
 
 end

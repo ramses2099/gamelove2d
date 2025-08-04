@@ -17,4 +17,14 @@ function Utils.dump(tbl, indent_level)
     io.write(indent .. "},\n")
 end
 
+function Utils.filter( arr, predicate )
+    local result = {}
+    for i, v in ipairs(arr) do
+        if predicate(v) then
+            table.insert(arr, i)
+        end
+    end
+    return result
+end
+
 return Utils
