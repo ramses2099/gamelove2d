@@ -73,6 +73,12 @@ function Vector:limit(max)
     return self    
 end
 
+function Vector:dist(v1)
+    local dx = v1.x - self.x
+    local dy = v1.y - self.y
+    return math.sqrt(dx * dx + dy * dy)    
+end
+
 function Vector:copy()
     return Vector.createVector(self.x, self.y)    
 end
@@ -135,6 +141,12 @@ function Vector.Utils.mag(v1)
     local m = x + y
 
     return math.sqrt(m)
+end
+
+function Vector.Utils.dist(v1, v2)
+    local dx = v2.x - v1.x
+    local dy = v2.y - v1.y
+    return math.sqrt(dx * dx + dy * dy)
 end
 
 return Vector

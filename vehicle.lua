@@ -17,17 +17,6 @@ function Vehicle.new(x, y)
     return self
 end
 
-function Vehicle:seek(target)
-    local desird = Vector.sub2D(target, self.position)
-    
-
-end
-
-function Vehicle:applyForce(v)
-    local f = v:copy()
-    f:div(self.mass)
-    self.acceleration:add(f)    
-end
 
 function Vehicle:draw()
     love.graphics.setColor(self.color)
