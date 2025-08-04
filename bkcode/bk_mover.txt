@@ -1,6 +1,5 @@
 local Vector = require("vector")
 local Shape = require("shape")
-local MathUtils = require("mathutils")
 
 Mover = {}
 Mover.__index = Mover
@@ -9,23 +8,21 @@ function Mover.new()
     local self = setmetatable({}, Mover)
     
     -- mass -- 
-    self.mass = 1.0
+    self.mass = math.random(1,4)
+    
     -- radius --
-    self.radius = 16 * 2
+    local radius = math.sqrt(self.mass) * 10
+    
     -- position --
-    local position = Vector.createVector()
-    self.shape = Shape.CircularShape.new(position.x, position.y, self.radius)
+    local position = Vector.createVector(250, 32)
+    self.shape = Shape.CircularShape.new(position.x, position.y, radius)
+    
     -- acceleration --
     self.acceleration = Vector.createVector(0, 0)
+    
     -- velocity --
     self.velocity = Vector.createVector(0, 0)
-
-    -- position --
-    self.angle = 0
-    -- acceleration --
-    self.angleVelocity = 0
-    -- velocity --
-    self.angleAcceleration = 0
+    
 
     self.color = {0.5, 0.5, 0.5}
     self.w_height = 600
@@ -34,27 +31,38 @@ function Mover.new()
     return self
 end
 
+function Mover:applyForce(force)
+    local f = Vector.Utils.div(force, self.mass)
+    self.acceleration:add(f)    
+end
+
+function Mover:friction()
+    local diff = self.w_height - (self.shape.position.y + self.shape.radius)
+    if (diff < 1) then
+        local friction = self.velocity:copy()
+        friction:normalize()
+        friction:mult(-1)
+
+        local mu = 0.1
+        local normal = self.mass
+        friction:setMag(mu * normal)
+
+        self:applyForce(friction)
+    end
+end
+
 function Mover:draw()
-    love.graphics.translate(W_WIDTH/2, W_HEIGHT/2)
-    love.graphics.rotate(self.angle)
-    love.graphics.setColor({1,1,1,1})
-    love.graphics.setLineWidth(5)
-    love.graphics.circle("line", self.shape.position.x, self.shape.position.y, self.shape.radius)
     love.graphics.setColor(self.color)
     love.graphics.circle("fill", self.shape.position.x, self.shape.position.y, self.shape.radius)
-    love.graphics.setColor({1,1,1,1})
-    love.graphics.line(0, 0, self.shape.radius, 0)
+    love.graphics.setLineWidth(5)
+    love.graphics.setColor(1, 1, 1, 1)   
+    love.graphics.circle("line", self.shape.position.x, self.shape.position.y, self.shape.radius)
 end
 
 function Mover:update( dt )
     self.velocity:add(self.acceleration)
-    self.shape.position:add(self.velocity)
-
-
-    self.angleAcceleration = self.acceleration.x / 10.0
-    self.angleVelocity = self.angleVelocity + angleAcceleration
-    self.angleVelocity = MathUtils.contrain(self.angleVelocity, -0.1, 0.1)
-    self.angle = self.angle + self.angleVelocity
+    self.shape.position:add(self.velocity) 
+    self:checkEdges()
 
     self.acceleration:set(0,0)
 end

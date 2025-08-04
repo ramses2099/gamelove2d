@@ -79,6 +79,10 @@ function Vector:dist(v1)
     return math.sqrt(dx * dx + dy * dy)    
 end
 
+function Vector:heading()
+    return math.atan2(self.x, self.y)    
+end
+
 function Vector:copy()
     return Vector.createVector(self.x, self.y)    
 end
