@@ -1,4 +1,6 @@
 _G.love = require("love")
+_G.W_WIDTH = 800
+_G.W_HEIGHT = 600
 
 function love.load()
     
