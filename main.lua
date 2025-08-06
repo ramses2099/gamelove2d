@@ -1,9 +1,14 @@
 _G.love = require("love")
-_G.W_WIDTH = 800
-_G.W_HEIGHT = 600
+local Game = require("game")
+_G.W_WIDTH = 600
+_G.W_HEIGHT = 800
+_G.DEBUG = true
 
+--https://www.youtube.com/watch?v=cuudnyDyWGE&list=WL&index=4&t=2320s
 function love.load()
-    
+  game = Game.newGame()
+  player = Game.Player.newPlayer(game.world, 200, 200)
+
 end
 
 function love.keypressed( key, scancode, isrepeat )
@@ -13,9 +18,16 @@ function love.keypressed( key, scancode, isrepeat )
 end
 
 function love.update(dt)
+  -- update physics
+  game.world:update(dt)
     
 end
 
 function love.draw()
+   -- Display FPS
+  if DEBUG then
+    love.graphics.setColor(1, 1, 1, 1) -- White
+    love.graphics.print("FPS: " .. love.timer.getFPS(), 10, 10)
+  end
     
 end
