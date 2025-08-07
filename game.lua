@@ -42,6 +42,7 @@ end
 function Game:update(dt)
     -- player --
     self.player:keyinput()
+    self.player:update(dt)
 
     --#region PROJECTILE
     for i = 1, #self.projectilesPool, 1 do
@@ -89,7 +90,11 @@ function Game.Player.newPlayer(game)
 end
 
 function Game.Player:update( dt )
-    
+    if self.body:getX() < -self.width * 0.5 then
+        self.body:setPosition(-self.width * 0.5, W_HEIGHT- self.height)
+    elseif self.body:getX() > W_WIDTH + self.width * 0.5 then
+        self.body:setPosition(W_WIDTH + self.width * 0.5, W_HEIGHT- self.height)
+    end    
 end
 
 function Game.Player:keyinput( dt )
