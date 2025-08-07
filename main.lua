@@ -1,25 +1,12 @@
 _G.love = require("love")
---local Game = require("game")
-local ph = require("physics")
-
+local Game = require("game")
 _G.W_WIDTH = 600
 _G.W_HEIGHT = 800
 _G.DEBUG = true
 
 --https://www.youtube.com/watch?v=cuudnyDyWGE&list=WL&index=4&t=2320s
 function love.load()
-  -- game = Game.newGame()
-  -- player = Game.Player.newPlayer(game.world, 200, 200)
-  love.physics.setMeter(64)
-  world = love.physics.newWorld(0, 9.81 * 64, true)
-  -- rectangle
-  ground = ph.newRectangleShape(world, 0, W_HEIGHT-52/2, W_WIDTH, 50,"static")
-  -- circle
-  ball = ph.newCircleShape(world, W_WIDTH/2, W_HEIGHT/2, 20)
-  ball.fixture:setRestitution(0.9)
-  -- blocks
-  block1 = ph.newRectangleShape(world, 200, 550, 50, 100,"dynamic", 5)
-  block2 = ph.newRectangleShape(world, 200, 400, 50, 100,"dynamic", 2)
+  game = Game.newGame()
 
 end
 
@@ -31,19 +18,9 @@ end
 
 function love.update(dt)
   -- update physics
-  -- game.world:update(dt)
-  world:update(dt)
-
-  --- input ball
-  if love.keyboard.isDown("right") then
-    ball.body:applyForce(400,0)
-  elseif love.keyboard.isDown("left") then
-    ball.body:applyForce(-400,0)
-  elseif love.keyboard.isDown("up") then
-    ball.body:setPosition( W_WIDTH/2, W_HEIGHT/2)
-    ball.body:setLinearVelocity(0,0)
-  end
-    
+  game.world:update(dt)
+  -- game update --
+  game:update()
 end
 
 function love.draw()
@@ -53,15 +30,7 @@ function love.draw()
     love.graphics.print("FPS: " .. love.timer.getFPS(), 10, 10)
   end
   -- draw graphics
-  -- ground
-  love.graphics.setColor(0.28, 0.63, 0.05)
-  love.graphics.polygon("fill", ground.body:getWorldPoints(ground.shape:getPoints()))
-  -- ball
-  love.graphics.setColor(0.76, 0.18, 0.05)
-  love.graphics.circle("fill", ball.body:getX(), ball.body:getY(), ball.shape:getRadius())
-  -- blocks
-  love.graphics.setColor(0.20, 0.20, 0.20)
-  love.graphics.polygon("fill", block1.body:getWorldPoints(block1.shape:getPoints()))
-  love.graphics.polygon("fill", block2.body:getWorldPoints(block2.shape:getPoints()))
-  
+  -- game draw --
+  game:draw()
+   
 end
